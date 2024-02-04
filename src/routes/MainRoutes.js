@@ -3,19 +3,18 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
+import Products from 'views/dashboard/Products';
+import Projects from 'views/dashboard/Projects';
+import Technical from 'views/dashboard/Technical';
+import Financial from 'views/dashboard/Financial';
+import Marketing from 'views/dashboard/Marketing';
+import HRPage from 'views/dashboard/HR';
+import Tasks from 'views/dashboard/Tasks';
+import Events from 'views/dashboard/Events';
+import Strategy from 'views/dashboard/Strategy';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
-
-// utilities routing
-const UtilsTypography = Loadable(lazy(() => import('views/utilities/Typography')));
-const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
-const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
-const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialIcons')));
-const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
-
-// sample page routing
-const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -33,57 +32,44 @@ const MainRoutes = {
         {
           path: 'default',
           element: <DashboardDefault />
-        }
-      ]
-    },
-    {
-      path: 'utils',
-      children: [
+        },
         {
-          path: 'util-typography',
-          element: <UtilsTypography />
-        }
-      ]
-    },
-    {
-      path: 'utils',
-      children: [
+          path: 'products',
+          element: <Products />
+        },
         {
-          path: 'util-color',
-          element: <UtilsColor />
-        }
-      ]
-    },
-    {
-      path: 'utils',
-      children: [
+          path: 'projects',
+          element: <Projects />
+        },
         {
-          path: 'util-shadow',
-          element: <UtilsShadow />
-        }
-      ]
-    },
-    {
-      path: 'icons',
-      children: [
+          path: 'technical',
+          element: <Technical />
+        },
         {
-          path: 'tabler-icons',
-          element: <UtilsTablerIcons />
-        }
-      ]
-    },
-    {
-      path: 'icons',
-      children: [
+          path: 'financial',
+          element: <Financial />
+        },
         {
-          path: 'material-icons',
-          element: <UtilsMaterialIcons />
+          path: 'marketing',
+          element: <Marketing />
+        },
+        {
+          path: 'hr',
+          element: <HRPage />
+        },
+        {
+          path: 'tasks',
+          element: <Tasks />
+        },
+        {
+          path: 'events',
+          element: <Events />
+        },
+        {
+          path: 'strategy',
+          element: <Strategy />
         }
       ]
-    },
-    {
-      path: 'sample-page',
-      element: <SamplePage />
     }
   ]
 };

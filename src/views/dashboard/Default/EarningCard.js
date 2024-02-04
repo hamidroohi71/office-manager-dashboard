@@ -17,6 +17,7 @@ import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
 import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
 import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
+import { useNavigate } from 'react-router';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.dark,
@@ -57,6 +58,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
 const EarningCard = ({ isLoading }) => {
+  const navigate = useNavigate();
   const theme = useTheme();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -65,6 +67,9 @@ const EarningCard = ({ isLoading }) => {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleCardClick = () => {
+    navigate('/dashboard/financial');
+  };
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -74,7 +79,7 @@ const EarningCard = ({ isLoading }) => {
       {isLoading ? (
         <SkeletonEarningCard />
       ) : (
-        <CardWrapper border={false} content={false}>
+        <CardWrapper border={false} content={false} onClick={handleCardClick}>
           <Box sx={{ p: 2.25 }}>
             <Grid container direction="column">
               <Grid item>
@@ -125,50 +130,71 @@ const EarningCard = ({ isLoading }) => {
                       }}
                     >
                       <MenuItem onClick={handleClose}>
-                        <GetAppTwoToneIcon sx={{ mr: 1.75 }} /> Import Card
+                        <Typography sx={{ fontSize: '1rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>Total</Typography>
                       </MenuItem>
                       <MenuItem onClick={handleClose}>
-                        <FileCopyTwoToneIcon sx={{ mr: 1.75 }} /> Copy Data
+                        <Typography sx={{ fontSize: '1rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>Past Month</Typography>
                       </MenuItem>
                       <MenuItem onClick={handleClose}>
-                        <PictureAsPdfTwoToneIcon sx={{ mr: 1.75 }} /> Export
+                        <Typography sx={{ fontSize: '1rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>Past 6 Months</Typography>
                       </MenuItem>
                       <MenuItem onClick={handleClose}>
-                        <ArchiveTwoToneIcon sx={{ mr: 1.75 }} /> Archive File
+                        <Typography sx={{ fontSize: '1rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>Past Year</Typography>
                       </MenuItem>
                     </Menu>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item>
-                <Grid container alignItems="center">
+              <Grid item style={{ zIndex: 100 }}>
+                <Grid container justifyContent="space-between" alignItems="flex-end">
                   <Grid item>
-                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>$500.00</Typography>
+                    <Grid container direction="column">
+                      <Grid item>
+                        <Grid container alignItems="center">
+                          <Grid item>
+                            <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>$500.00</Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item sx={{ mb: 1.25 }}>
+                        <Typography
+                          sx={{
+                            fontSize: '1rem',
+                            fontWeight: 500,
+                            color: theme.palette.secondary[200]
+                          }}
+                        >
+                          Total Earning
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </Grid>
+
                   <Grid item>
-                    <Avatar
-                      sx={{
-                        cursor: 'pointer',
-                        ...theme.typography.smallAvatar,
-                        backgroundColor: theme.palette.secondary[200],
-                        color: theme.palette.secondary.dark
-                      }}
-                    >
-                      <ArrowUpwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
-                    </Avatar>
+                    <Grid container direction="column">
+                      <Grid item>
+                        <Grid container alignItems="center">
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.9rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>Income</Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.9rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>$500.00</Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item>
+                        <Grid container alignItems="center">
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.9rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>Outcome</Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.9rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>$400.00</Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid item sx={{ mb: 1.25 }}>
-                <Typography
-                  sx={{
-                    fontSize: '1rem',
-                    fontWeight: 500,
-                    color: theme.palette.secondary[200]
-                  }}
-                >
-                  Total Earning
-                </Typography>
               </Grid>
             </Grid>
           </Box>
