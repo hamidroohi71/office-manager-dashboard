@@ -64,6 +64,7 @@ const EarningCard = ({ isLoading }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
 
@@ -79,13 +80,14 @@ const EarningCard = ({ isLoading }) => {
       {isLoading ? (
         <SkeletonEarningCard />
       ) : (
-        <CardWrapper border={false} content={false} onClick={handleCardClick}>
+        <CardWrapper border={false} content={false}>
           <Box sx={{ p: 2.25 }}>
             <Grid container direction="column">
               <Grid item>
                 <Grid container justifyContent="space-between">
                   <Grid item>
                     <Avatar
+                      onClick={handleCardClick}
                       variant="rounded"
                       sx={{
                         ...theme.typography.commonAvatar,
@@ -109,11 +111,13 @@ const EarningCard = ({ isLoading }) => {
                       }}
                       aria-controls="menu-earning-card"
                       aria-haspopup="true"
-                      onClick={handleClick}
                     >
                       <MoreHorizIcon fontSize="inherit" />
                     </Avatar>
                     <Menu
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
                       id="menu-earning-card"
                       anchorEl={anchorEl}
                       keepMounted
