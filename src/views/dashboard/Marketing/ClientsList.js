@@ -22,15 +22,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
-function createData(id, name, type) {
+function createData(isReal, client_name, client_id) {
   return {
-    id,
-    name,
-    type
+    isReal,
+    client_name,
+    client_id
   };
 }
 
-const rows = [createData(1, 'Rasooli', 'Real'), createData(2, 'Raymon', 'Real')];
+// const rows = [createData(1, 'Rasooli', 'Real'), createData(2, 'Raymon', 'Real')];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -176,7 +176,9 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 };
 
-export default function ClientsList() {
+export default function ClientsList({ clients }) {
+  const rows = clients.map((item) => createData(item.isReal, item.client_name, item.client_id));
+  console.log(rows);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -192,7 +194,7 @@ export default function ClientsList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = rows.map((n) => n.client_id);
       setSelected(newSelected);
       return;
     }
@@ -235,7 +237,7 @@ export default function ClientsList() {
 
   const visibleRows = React.useMemo(
     () => stableSort(rows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, rows]
   );
 
   return (
@@ -254,17 +256,17 @@ export default function ClientsList() {
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.id);
+                const isItemSelected = isSelected(row.client_id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.id)}
+                    onClick={(event) => handleClick(event, row.client_id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.id}
+                    key={row.client_id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -278,9 +280,9 @@ export default function ClientsList() {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="none">
-                      {row.name}
+                      {row.client_name}
                     </TableCell>
-                    <TableCell align="left">{row.type}</TableCell>
+                    <TableCell align="left">{row.isReal ? 'Natural Person' : 'Legal Person'}</TableCell>
                   </TableRow>
                 );
               })}
@@ -310,3 +312,7 @@ export default function ClientsList() {
     </Box>
   );
 }
+
+ClientsList.propTypes = {
+  clients: PropTypes.array.isRequired
+};

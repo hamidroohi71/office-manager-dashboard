@@ -2,14 +2,16 @@ import axios from 'axios';
 import { BASE_BACK_URL } from 'constants';
 
 //clients
-export const getClients = () => {
-  axios
+export const getClients = async () => {
+  return axios
     .get(`${BASE_BACK_URL}/clients/read`)
     .then((res) => {
       console.log(res.data);
+      return res.data;
     })
     .catch((err) => {
       console.log(err);
+      return err;
     });
 };
 
@@ -26,11 +28,10 @@ export const getClientById = (id) => {
 
 export const createClient = (data) => {
   axios
-    .post(`${BASE_BACK_URL}/clients/create/`, {
+    .post(`${BASE_BACK_URL}/clients/create/`, data, {
       headers: {
         'Content-Type': 'application/json'
-      },
-      data
+      }
     })
     .then((res) => {
       console.log(res);
