@@ -26,8 +26,8 @@ export const getProductById = (id) => {
     });
 };
 
-export const createProduct = (data) => {
-  axios
+export const createProduct = async (data) => {
+  return axios
     .post(`${BASE_BACK_URL}/products/create/`, data, {
       headers: {
         'Content-Type': 'application/json'
@@ -35,9 +35,7 @@ export const createProduct = (data) => {
     })
     .then((res) => {
       console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
+      return res;
     });
 };
 

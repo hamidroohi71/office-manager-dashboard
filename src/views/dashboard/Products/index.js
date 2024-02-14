@@ -10,6 +10,7 @@ import {
   MenuItem,
   Paper,
   Select,
+  Snackbar,
   TextField,
   Typography
 } from '@mui/material';
@@ -25,19 +26,31 @@ export default function Projects() {
   const [products, setProducts] = useState([]);
   const [productName, setProductName] = useState('');
   const [productComments, setProductComments] = useState('');
+  const [notif, setNotif] = useState(null);
 
   useEffect(() => {
+    handleGetProducts();
+  }, []);
+
+  const handleGetProducts = () => {
     getProducts().then((res) => {
       console.log(res);
       setProducts([...res]);
     });
-  }, []);
+  };
 
   const handleAddProduct = () => {
     createProduct({
       productName: productName,
       productComments: productComments
-    });
+    })
+      .then(() => {
+        setNotif('Product added successfully');
+        handleGetProducts();
+      })
+      .catch(() => {
+        setNotif('Something wrong');
+      });
   };
 
   return (
@@ -126,6 +139,14 @@ export default function Projects() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={notif ? true : false}
+        autoHideDuration={6000}
+        onClose={() => {
+          setNotif(null);
+        }}
+        message={notif}
+      />
     </Grid>
   );
 }
