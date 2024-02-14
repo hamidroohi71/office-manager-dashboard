@@ -10,6 +10,7 @@ import TotalMarketingCard from './TotalMarketingCard';
 import { gridSpacing } from 'store/constant';
 import EventCard from './EventCard';
 import TotalProjectChart from './TotalProjectChart';
+import { getUsers } from 'dataHandlers/userDataHandler';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
@@ -17,6 +18,7 @@ const Dashboard = () => {
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(false);
+    getUsers();
   }, []);
 
   return (

@@ -308,8 +308,8 @@ export default function MembersList() {
                       {row.name}
                     </TableCell>
                     <TableCell align="left">{row.role}</TableCell>
-                    <TableCell align="left">{row.age}</TableCell>
-                    <TableCell align="left">{row.score}</TableCell>
+                    <TableCell align="right">{row.age}</TableCell>
+                    <TableCell align="right">{row.score}</TableCell>
                     <TableCell align="right">{row.status}</TableCell>
                   </TableRow>
                 );
