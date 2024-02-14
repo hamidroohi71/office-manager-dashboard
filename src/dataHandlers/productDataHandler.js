@@ -2,14 +2,16 @@ import axios from 'axios';
 import { BASE_BACK_URL } from 'constants';
 
 //clients
-export const getProduct = () => {
-  axios
+export const getProducts = async () => {
+  return axios
     .get(`${BASE_BACK_URL}/products/read`)
     .then((res) => {
       console.log(res.data);
+      return res.data;
     })
     .catch((err) => {
       console.log(err);
+      return err;
     });
 };
 
@@ -26,11 +28,10 @@ export const getProductById = (id) => {
 
 export const createProduct = (data) => {
   axios
-    .post(`${BASE_BACK_URL}/products/create/`, {
+    .post(`${BASE_BACK_URL}/products/create/`, data, {
       headers: {
         'Content-Type': 'application/json'
-      },
-      data
+      }
     })
     .then((res) => {
       console.log(res);

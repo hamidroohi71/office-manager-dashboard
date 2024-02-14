@@ -22,23 +22,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
-function createData(id, name, status, releaseTime, manager, progress) {
+function createData(id, name, comments, status, releaseTime, manager, progress) {
   return {
     id,
     name,
+    comments,
     status,
     releaseTime,
     manager,
     progress
   };
 }
-
-const rows = [
-  createData(1, 'Industries war', 'On Progress', '1402-11-22', 'Hamid Roohi', 80),
-  createData(2, 'Top Investor', 'Pending', '1402-05-12', 'Hamid Roohi', 90),
-  createData(3, '#D Website', 'Pending', '1402-10-07', 'Hamid Roohi', 70),
-  createData(3, 'Office manager', 'On Progress', '1402-10-07', 'Hamid Roohi', 70)
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -76,6 +70,12 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: 'Product Name'
+  },
+  {
+    id: 'comment',
+    numeric: false,
+    disablePadding: true,
+    label: 'Product Comments'
   },
   {
     id: 'status',
@@ -202,7 +202,9 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 };
 
-export default function ProductsList() {
+export default function ProductsList({ products }) {
+  const rows = products.map((item) => createData(item.product_id, item.product_name, item.product_comments));
+
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -261,7 +263,7 @@ export default function ProductsList() {
 
   const visibleRows = React.useMemo(
     () => stableSort(rows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, rows]
   );
 
   return (
@@ -306,6 +308,7 @@ export default function ProductsList() {
                     <TableCell component="th" id={labelId} scope="row" padding="none">
                       {row.name}
                     </TableCell>
+                    <TableCell align="left">{row.comments}</TableCell>
                     <TableCell align="left">{row.status}</TableCell>
                     <TableCell align="left">{row.releaseTime}</TableCell>
                     <TableCell align="left">{row.manager}</TableCell>
@@ -339,3 +342,7 @@ export default function ProductsList() {
     </Box>
   );
 }
+
+ProductsList.propTypes = {
+  products: PropTypes.array.isRequired
+};

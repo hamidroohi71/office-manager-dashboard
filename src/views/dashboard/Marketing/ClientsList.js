@@ -178,7 +178,6 @@ EnhancedTableToolbar.propTypes = {
 
 export default function ClientsList({ clients }) {
   const rows = clients.map((item) => createData(item.isReal, item.client_name, item.client_id));
-  console.log(rows);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
