@@ -210,7 +210,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 };
 
-export default function ProjectsList({ projects, handleClickToEdit }) {
+export default function ProjectsList({ projects, handleClickToEdit, progressCalc }) {
   const rows = projects.map((item) =>
     createData(item.project_id, item.project_name, 'not set', new Date(item.project_deadline).toLocaleDateString(), 'not set', 0)
   );
@@ -320,7 +320,7 @@ export default function ProjectsList({ projects, handleClickToEdit }) {
                     <TableCell align="left">{row.client}</TableCell>
                     <TableCell align="left">{row.deadline}</TableCell>
                     <TableCell align="left">{row.manager}</TableCell>
-                    <TableCell align="right">{row.progress}</TableCell>
+                    <TableCell align="right">{progressCalc(row.id)}</TableCell>
                     <TableCell align="right">
                       <Grid container justifyContent="end">
                         <Grid item>
@@ -380,5 +380,6 @@ export default function ProjectsList({ projects, handleClickToEdit }) {
 
 ProjectsList.propTypes = {
   projects: PropTypes.array.isRequired,
-  handleClickToEdit: PropTypes.array.isRequired
+  handleClickToEdit: PropTypes.array.isRequired,
+  progressCalc: PropTypes.func.isRequired
 };

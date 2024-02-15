@@ -23,6 +23,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // eslint-disable-next-line no-restricted-imports
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
+import { getTasks } from 'dataHandlers/taskDataHandler';
 
 export default function Projects() {
   const [addModal, setAddModal] = useState(false);
@@ -34,9 +35,11 @@ export default function Projects() {
   const [productId, setProductId] = useState(null);
   const [notif, setNotif] = useState(null);
   const [editId, setEditId] = useState(null);
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     handleGetProjects();
+    handleGetTasks();
   }, []);
 
   const handleGetProjects = () => {
@@ -44,6 +47,33 @@ export default function Projects() {
       console.log(res);
       setProjects([...res]);
     });
+  };
+
+  const handleGetTasks = () => {
+    getTasks().then((res) => {
+      console.log(res);
+      setTasks([...res]);
+    });
+  };
+
+  const progressCalc = (projectId) => {
+    let taskList = [];
+    for (const item of tasks) {
+      if (item.project_id === projectId) {
+        taskList.push(item);
+      }
+    }
+
+    let done = 0;
+    let all = 0;
+
+    for (const item of taskList) {
+      done += (item.progress / item.estimation) * 100;
+      all += item.estimation;
+    }
+
+    const percentage = done > 0 ? Math.floor((parseInt(done) / parseInt(all)) * 100) : 0;
+    return percentage;
   };
 
   const handleAddProject = () => {
@@ -116,7 +146,7 @@ export default function Projects() {
         </Box>
       </Grid>
       <Grid item>
-        <ProjectsList projects={projects} handleClickToEdit={handleClickToEdit} />
+        <ProjectsList projects={projects} handleClickToEdit={handleClickToEdit} progressCalc={progressCalc} />
       </Grid>
       <Dialog
         open={addModal}
