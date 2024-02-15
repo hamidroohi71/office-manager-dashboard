@@ -40,6 +40,7 @@ export default function Projects() {
   useEffect(() => {
     handleGetProjects();
     handleGetTasks();
+    setEditId(null);
   }, []);
 
   const handleGetProjects = () => {
@@ -68,11 +69,13 @@ export default function Projects() {
     let all = 0;
 
     for (const item of taskList) {
-      done += (item.progress / item.estimation) * 100;
+      done += (item.progress * item.estimation) / 100;
       all += item.estimation;
     }
 
-    const percentage = done > 0 ? Math.floor((parseInt(done) / parseInt(all)) * 100) : 0;
+    console.log(projectId, done, all);
+
+    const percentage = done > 0 ? Math.floor((done / all) * 100) : 0;
     return percentage;
   };
 
@@ -154,7 +157,7 @@ export default function Projects() {
           setAddModal(false);
         }}
       >
-        <DialogTitle id="alert-dialog-title">Add New Product</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{editId ? 'Update the Projects' : 'Add New Project'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">Please enter the Product features</DialogContentText>
           <TextField

@@ -45,7 +45,14 @@ export default function Tasks() {
   useEffect(() => {
     handleGetTasks();
     handleGetProjects();
+    setEditId(null);
   }, []);
+
+  useEffect(() => {
+    if (!addModal) {
+      setEditId(null);
+    }
+  }, [addModal]);
 
   const handleGetTasks = () => {
     getTasks().then((res) => {
@@ -94,7 +101,7 @@ export default function Tasks() {
       taskDescription: taskDescription,
       deadline: new Date(taskDeadline).toISOString().split('T')[0],
       estimation: +taskEstimation,
-      progress: taskProgress,
+      progress: +taskProgress,
       projectId: taskProject
     })
       .then(() => {
@@ -148,7 +155,7 @@ export default function Tasks() {
           setAddModal(false);
         }}
       >
-        <DialogTitle id="alert-dialog-title">Add New Product</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{editId ? 'Update the Task' : 'Add New Task'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">Please enter the Product features</DialogContentText>
           <TextField
@@ -187,7 +194,7 @@ export default function Tasks() {
             fullWidth
             variant="standard"
             onChange={(e) => {
-              setTaskEstimation(e.target.value);
+              setTaskEstimation(+e.target.value);
             }}
             value={taskEstimation}
           ></TextField>
@@ -202,7 +209,7 @@ export default function Tasks() {
             fullWidth
             variant="standard"
             onChange={(e) => {
-              setTaskProgress(e.target.value);
+              setTaskProgress(+e.target.value);
             }}
             value={taskProgress}
           ></TextField>
@@ -231,7 +238,7 @@ export default function Tasks() {
         <DialogActions>
           <Button
             onClick={() => {
-              if (editTask) {
+              if (editId) {
                 handleEditTask();
               } else {
                 handleAddTask();

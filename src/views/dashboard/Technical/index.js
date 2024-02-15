@@ -6,8 +6,10 @@ import TotalTasksCard from './TotalTasksCard';
 import TotalPerformance from './TotalPerformanceCard';
 import TotalProjectChart from '../Default/TotalProjectChart';
 import TasksList from '../Tasks/TasksList';
+import { useState } from 'react';
 
 export default function Technical() {
+  const [tasks, setTasks] = useState([]);
   return (
     <Grid container direction="column">
       <Grid item>
@@ -44,7 +46,7 @@ export default function Technical() {
           </Grid>
           <Grid container sx={{ width: '100%', mt: 2 }}>
             <Grid item sx={{ width: '100%' }}>
-              <TasksList />
+              {/* <TasksList /> */}
             </Grid>
           </Grid>
         </Box>
