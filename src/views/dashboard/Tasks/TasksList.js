@@ -21,6 +21,8 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import { Grid } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 
 function createData(id, description, project, deadline, assign, status, progress) {
   return {
@@ -100,6 +102,12 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: 'Progress'
+  },
+  {
+    id: 'actions',
+    numeric: true,
+    disablePadding: false,
+    label: 'Actions '
   }
 ];
 
@@ -202,7 +210,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 };
 
-export default function TasksList({ tasks }) {
+export default function TasksList({ tasks, projects, handleClickToEdit }) {
   const rows = tasks.map((item) =>
     createData(
       item.task_id,
@@ -220,6 +228,14 @@ export default function TasksList({ tasks }) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const showProjectName = (id) => {
+    for (const item of projects) {
+      if (item.project_id === id) {
+        return item.project_name;
+      }
+    }
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -317,11 +333,38 @@ export default function TasksList({ tasks }) {
                     <TableCell component="th" id={labelId} scope="row" padding="none">
                       {row.description}
                     </TableCell>
-                    <TableCell align="left">{row.project}</TableCell>
+                    <TableCell align="left">{showProjectName(row.project)}</TableCell>
                     <TableCell align="left">{row.deadline}</TableCell>
                     <TableCell align="left">{row.assign}</TableCell>
                     <TableCell align="left">{row.status}</TableCell>
                     <TableCell align="right">{row.progress}</TableCell>
+                    <TableCell align="right">
+                      <Grid container justifyContent="end">
+                        <Grid item>
+                          <EditIcon
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              console.log('edit');
+                              handleClickToEdit(row.id, {
+                                description: row.description,
+                                deadline: row.deadline,
+                                estimation: row.estimation,
+                                progress: row.progress,
+                                projectId: row.projectId
+                              });
+                            }}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <DeleteIcon
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              console.log('delete');
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -353,5 +396,7 @@ export default function TasksList({ tasks }) {
 }
 
 TasksList.propTypes = {
-  tasks: PropTypes.array.isRequired
+  tasks: PropTypes.array.isRequired,
+  projects: PropTypes.array.isRequired,
+  handleClickToEdit: PropTypes.func.isRequired
 };

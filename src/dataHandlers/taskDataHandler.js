@@ -21,6 +21,7 @@ export const getTaskById = (id) => {
 };
 
 export const createTask = async (data) => {
+  console.log(data);
   return axios
     .post(`${BASE_BACK_URL}/tasks/create/`, data, {
       headers: {
@@ -33,19 +34,16 @@ export const createTask = async (data) => {
     });
 };
 
-export const editTask = (id, data) => {
-  axios
-    .put(`${BASE_BACK_URL}/tasks/update/${id}`, {
+export const editTask = async (id, data) => {
+  console.log(data);
+  return axios
+    .put(`${BASE_BACK_URL}/tasks/update/${id}`, data, {
       headers: {
         'Content-Type': 'application/json'
-      },
-      data
+      }
     })
     .then((res) => {
       console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
     });
 };
 

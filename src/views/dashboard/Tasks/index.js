@@ -26,8 +26,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // eslint-disable-next-line no-restricted-imports
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { createTask, getTasks } from 'dataHandlers/taskDataHandler';
+import { createTask, editTask, getTasks } from 'dataHandlers/taskDataHandler';
 import { getProjects } from 'dataHandlers/projectDataHandler';
+import dayjs from 'dayjs';
 
 export default function Tasks() {
   const [addModal, setAddModal] = useState(false);
@@ -39,6 +40,7 @@ export default function Tasks() {
   const [taskProject, setTaskProject] = useState(null);
   const [notif, setNotif] = useState(null);
   const [projects, setProjects] = useState([]);
+  const [editId, setEditId] = useState(null);
 
   useEffect(() => {
     handleGetTasks();
@@ -69,6 +71,35 @@ export default function Tasks() {
     })
       .then(() => {
         setNotif('Task added successfully');
+        handleGetTasks();
+      })
+      .catch(() => {
+        setNotif('Something wrong');
+      });
+  };
+
+  const handleClickToEdit = (id, data) => {
+    setEditId(id);
+    console.log(data.estimation);
+    setTaskDescription(data.description);
+    setTaskDeadline(dayjs(data.deadline));
+    setTaskEstimation(+data.estimation);
+    setTaskProgress(data.progress);
+    setTaskProject(data.projectId);
+    setAddModal(true);
+  };
+
+  const handleEditTask = () => {
+    editTask(editId, {
+      taskDescription: taskDescription,
+      deadline: new Date(taskDeadline).toISOString().split('T')[0],
+      estimation: +taskEstimation,
+      progress: taskProgress,
+      projectId: taskProject
+    })
+      .then(() => {
+        setNotif('Task updated successfully');
+        setEditId(null);
         handleGetTasks();
       })
       .catch(() => {
@@ -106,7 +137,7 @@ export default function Tasks() {
           </Grid>
           <Grid container sx={{ width: '100%', mt: 2 }}>
             <Grid item sx={{ width: '100%' }}>
-              <TasksList tasks={tasks} />
+              <TasksList tasks={tasks} projects={projects} handleClickToEdit={handleClickToEdit} />
             </Grid>
           </Grid>
         </Box>
@@ -200,8 +231,12 @@ export default function Tasks() {
         <DialogActions>
           <Button
             onClick={() => {
+              if (editTask) {
+                handleEditTask();
+              } else {
+                handleAddTask();
+              }
               setAddModal(false);
-              handleAddTask();
             }}
           >
             Add
