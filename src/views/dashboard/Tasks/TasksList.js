@@ -22,22 +22,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
-function createData(id, subject, project, deadline, assign, status) {
+function createData(id, description, project, deadline, assign, status, progress) {
   return {
     id,
-    subject,
+    description,
     project,
     deadline,
     assign,
-    status
+    status,
+    progress
   };
 }
-
-const rows = [
-  createData(1, 'layout', 'RayanAd', '1402-11-22', 'Mana Mobahi', 'done'),
-  createData(2, 'header', 'UAV', '1402-11-22', 'Mohammad Hanji', 'doing'),
-  createData(3, 'logic', 'Artur', '1402-11-22', 'Hamid Roohi', 'test')
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -71,10 +66,10 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'subject',
+    id: 'description',
     numeric: false,
     disablePadding: true,
-    label: 'Subject'
+    label: 'Description'
   },
   {
     id: 'project',
@@ -96,9 +91,15 @@ const headCells = [
   },
   {
     id: 'status',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Status'
+  },
+  {
+    id: 'progress',
+    numeric: true,
+    disablePadding: false,
+    label: 'Progress'
   }
 ];
 
@@ -201,7 +202,18 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 };
 
-export default function TasksList() {
+export default function TasksList({ tasks }) {
+  const rows = tasks.map((item) =>
+    createData(
+      item.task_id,
+      item.task_description,
+      item.project_id,
+      new Date(item.deadline).toISOString().split('T')[0],
+      'not set',
+      'not set',
+      item.progress
+    )
+  );
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -260,7 +272,7 @@ export default function TasksList() {
 
   const visibleRows = React.useMemo(
     () => stableSort(rows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, rows]
   );
 
   return (
@@ -303,12 +315,13 @@ export default function TasksList() {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="none">
-                      {row.subject}
+                      {row.description}
                     </TableCell>
                     <TableCell align="left">{row.project}</TableCell>
                     <TableCell align="left">{row.deadline}</TableCell>
                     <TableCell align="left">{row.assign}</TableCell>
-                    <TableCell align="right">{row.status}</TableCell>
+                    <TableCell align="left">{row.status}</TableCell>
+                    <TableCell align="right">{row.progress}</TableCell>
                   </TableRow>
                 );
               })}
@@ -338,3 +351,7 @@ export default function TasksList() {
     </Box>
   );
 }
+
+TasksList.propTypes = {
+  tasks: PropTypes.array.isRequired
+};

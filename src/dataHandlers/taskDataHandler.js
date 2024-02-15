@@ -2,15 +2,11 @@ import axios from 'axios';
 import { BASE_BACK_URL } from 'constants';
 
 //clients
-export const getTasks = () => {
-  axios
-    .get(`${BASE_BACK_URL}/tasks/read`)
-    .then((res) => {
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+export const getTasks = async () => {
+  return axios.get(`${BASE_BACK_URL}/tasks/read`).then((res) => {
+    console.log(res.data);
+    return res.data;
+  });
 };
 
 export const getTaskById = (id) => {
@@ -24,19 +20,16 @@ export const getTaskById = (id) => {
     });
 };
 
-export const createTask = (data) => {
-  axios
-    .post(`${BASE_BACK_URL}/tasks/create/`, {
+export const createTask = async (data) => {
+  return axios
+    .post(`${BASE_BACK_URL}/tasks/create/`, data, {
       headers: {
         'Content-Type': 'application/json'
-      },
-      data
+      }
     })
     .then((res) => {
       console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
+      return res;
     });
 };
 

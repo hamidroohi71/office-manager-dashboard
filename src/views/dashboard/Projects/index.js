@@ -14,7 +14,6 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import dayjs from 'dayjs';
 import { useState } from 'react';
 import { createProject, getProjects } from 'dataHandlers/projectDataHandler';
 import { useEffect } from 'react';
@@ -23,6 +22,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // eslint-disable-next-line no-restricted-imports
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { createTask, getTasks } from 'dataHandlers/taskDataHandler';
 
 export default function Projects() {
   const [addModal, setAddModal] = useState(false);
