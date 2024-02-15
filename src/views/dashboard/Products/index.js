@@ -6,10 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
-  InputLabel,
-  MenuItem,
   Paper,
-  Select,
   Snackbar,
   TextField,
   Typography

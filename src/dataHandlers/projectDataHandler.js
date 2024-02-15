@@ -2,15 +2,11 @@ import axios from 'axios';
 import { BASE_BACK_URL } from 'constants';
 
 //clients
-export const getProjects = () => {
-  axios
-    .get(`${BASE_BACK_URL}/projects/read`)
-    .then((res) => {
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+export const getProjects = async () => {
+  return axios.get(`${BASE_BACK_URL}/projects/read`).then((res) => {
+    console.log(res.data);
+    return res.data;
+  });
 };
 
 export const getProjectById = (id) => {
@@ -24,19 +20,16 @@ export const getProjectById = (id) => {
     });
 };
 
-export const createProject = (data) => {
-  axios
-    .post(`${BASE_BACK_URL}/projects/create/`, {
+export const createProject = async (data) => {
+  return axios
+    .post(`${BASE_BACK_URL}/projects/create/`, data, {
       headers: {
         'Content-Type': 'application/json'
-      },
-      data
+      }
     })
     .then((res) => {
       console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
+      return res;
     });
 };
 

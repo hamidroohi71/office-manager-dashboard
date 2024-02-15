@@ -33,12 +33,12 @@ function createData(id, name, client, deadline, manager, progress) {
   };
 }
 
-const rows = [
-  createData(1, 'RayanAd', 'Rasooli', '1402-11-22', 'Hamid Roohi', 80),
-  createData(2, 'Artur', 'Omid Azeri', '1402-05-12', 'Hamid Roohi', 90),
-  createData(3, 'UAV', 'Raymond', '1402-10-07', 'Hamid Roohi', 70),
-  createData(4, 'DG Tamin', 'DG Tamin', '1402-11-22', 'Hamid Roohi', 100)
-];
+// const rows = [
+//   createData(1, 'RayanAd', 'Rasooli', '1402-11-22', 'Hamid Roohi', 80),
+//   createData(2, 'Artur', 'Omid Azeri', '1402-05-12', 'Hamid Roohi', 90),
+//   createData(3, 'UAV', 'Raymond', '1402-10-07', 'Hamid Roohi', 70),
+//   createData(4, 'DG Tamin', 'DG Tamin', '1402-11-22', 'Hamid Roohi', 100)
+// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -202,7 +202,10 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 };
 
-export default function ProjectsList() {
+export default function ProjectsList({ projects }) {
+  const rows = projects.map((item) =>
+    createData(item.project_id, item.project_name, 'not set', new Date(item.project_deadline).toLocaleDateString(), 'not set', 0)
+  );
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -261,7 +264,7 @@ export default function ProjectsList() {
 
   const visibleRows = React.useMemo(
     () => stableSort(rows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, rows]
   );
 
   return (
@@ -339,3 +342,7 @@ export default function ProjectsList() {
     </Box>
   );
 }
+
+ProjectsList.propTypes = {
+  projects: PropTypes.array.isRequired
+};
