@@ -33,19 +33,16 @@ export const createProject = async (data) => {
     });
 };
 
-export const editProject = (id, data) => {
-  axios
-    .put(`${BASE_BACK_URL}/projects/update/${id}`, {
+export const editProject = async (id, data) => {
+  return axios
+    .put(`${BASE_BACK_URL}/projects/update/${id}`, data, {
       headers: {
         'Content-Type': 'application/json'
-      },
-      data
+      }
     })
     .then((res) => {
       console.log(res);
-    })
-    .catch((err) => {
-      console.log(err);
+      return res;
     });
 };
 

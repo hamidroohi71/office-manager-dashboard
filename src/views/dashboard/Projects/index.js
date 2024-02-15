@@ -15,14 +15,14 @@ import {
   Typography
 } from '@mui/material';
 import { useState } from 'react';
-import { createProject, getProjects } from 'dataHandlers/projectDataHandler';
+import { createProject, editProject, getProjects } from 'dataHandlers/projectDataHandler';
 import { useEffect } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // eslint-disable-next-line no-restricted-imports
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { createTask, getTasks } from 'dataHandlers/taskDataHandler';
+import dayjs from 'dayjs';
 
 export default function Projects() {
   const [addModal, setAddModal] = useState(false);
@@ -33,6 +33,7 @@ export default function Projects() {
   const [projectDeadLine, setProjectDeadLine] = useState();
   const [productId, setProductId] = useState(null);
   const [notif, setNotif] = useState(null);
+  const [editId, setEditId] = useState(null);
 
   useEffect(() => {
     handleGetProjects();
@@ -55,6 +56,35 @@ export default function Projects() {
     })
       .then(() => {
         setNotif('Project added successfully');
+        handleGetProjects();
+      })
+      .catch(() => {
+        setNotif('Something wrong');
+      });
+  };
+
+  const handleClickToEdit = (id, data) => {
+    setEditId(id);
+    console.log(data.estimation);
+    setProjectName(data.projectName);
+    setProjectDeadLine(dayjs(data.deadline));
+    setProjectsComments(data.comments);
+    setProjectPrice(data.price);
+    setProductId(data.productId ? data.productId : null);
+    setAddModal(true);
+  };
+
+  const handleEditProject = () => {
+    editProject(editId, {
+      projectName: projectName,
+      projectComment: projectComments,
+      projectDeadline: new Date(projectDeadLine).toISOString().split('T')[0],
+      projectPrice: projectPrice,
+      productId: productId
+    })
+      .then(() => {
+        setNotif('Task updated successfully');
+        setEditId(null);
         handleGetProjects();
       })
       .catch(() => {
@@ -86,7 +116,7 @@ export default function Projects() {
         </Box>
       </Grid>
       <Grid item>
-        <ProjectsList projects={projects} />
+        <ProjectsList projects={projects} handleClickToEdit={handleClickToEdit} />
       </Grid>
       <Dialog
         open={addModal}
@@ -156,8 +186,12 @@ export default function Projects() {
         <DialogActions>
           <Button
             onClick={() => {
+              if (editId) {
+                handleEditProject();
+              } else {
+                handleAddProject();
+              }
               setAddModal(false);
-              handleAddProject();
             }}
           >
             Add

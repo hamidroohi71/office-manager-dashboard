@@ -21,6 +21,8 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import EditIcon from '@mui/icons-material/Edit';
+import { Grid } from '@mui/material';
 
 function createData(id, name, client, deadline, manager, progress) {
   return {
@@ -100,6 +102,12 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: 'Progress'
+  },
+  {
+    id: 'actions',
+    numeric: true,
+    disablePadding: false,
+    label: 'Actions '
   }
 ];
 
@@ -202,7 +210,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 };
 
-export default function ProjectsList({ projects }) {
+export default function ProjectsList({ projects, handleClickToEdit }) {
   const rows = projects.map((item) =>
     createData(item.project_id, item.project_name, 'not set', new Date(item.project_deadline).toLocaleDateString(), 'not set', 0)
   );
@@ -313,6 +321,33 @@ export default function ProjectsList({ projects }) {
                     <TableCell align="left">{row.deadline}</TableCell>
                     <TableCell align="left">{row.manager}</TableCell>
                     <TableCell align="right">{row.progress}</TableCell>
+                    <TableCell align="right">
+                      <Grid container justifyContent="end">
+                        <Grid item>
+                          <EditIcon
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              console.log('edit');
+                              handleClickToEdit(row.id, {
+                                projectName: row.name,
+                                deadline: row.deadline,
+                                comments: row.comments,
+                                price: row.price,
+                                productId: row.productId
+                              });
+                            }}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <DeleteIcon
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              console.log('delete');
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -344,5 +379,6 @@ export default function ProjectsList({ projects }) {
 }
 
 ProjectsList.propTypes = {
-  projects: PropTypes.array.isRequired
+  projects: PropTypes.array.isRequired,
+  handleClickToEdit: PropTypes.array.isRequired
 };
