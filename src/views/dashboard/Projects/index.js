@@ -24,6 +24,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import { getTasks } from 'dataHandlers/taskDataHandler';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 
 export default function Projects() {
   const [addModal, setAddModal] = useState(false);
@@ -98,7 +99,7 @@ export default function Projects() {
 
   const handleClickToEdit = (id, data) => {
     setEditId(id);
-    console.log(data.estimation);
+    console.log(data);
     setProjectName(data.projectName);
     setProjectDeadLine(dayjs(data.deadline));
     setProjectsComments(data.comments);
@@ -124,6 +125,11 @@ export default function Projects() {
         setNotif('Something wrong');
       });
   };
+
+  useEffect(() => {
+    console.log(projectComments);
+  }, [projectComments]);
+
   return (
     <Grid container direction="column">
       <Grid item>
@@ -190,11 +196,11 @@ export default function Projects() {
             }}
             value={projectComments}
           ></TextField>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
             <DemoContainer variant="standard" components={['DatePicker']} sx={{ height: 'fit-content', py: 2 }}>
               <DatePicker
                 label="Project Deadline"
-                value={projectDeadLine}
+                value={new Date(projectDeadLine)}
                 onChange={(newValue) => setProjectDeadLine(newValue)}
                 slotProps={{ textField: { variant: 'standard' } }}
               />

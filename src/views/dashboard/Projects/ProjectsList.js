@@ -24,10 +24,11 @@ import { visuallyHidden } from '@mui/utils';
 import EditIcon from '@mui/icons-material/Edit';
 import { Grid } from '@mui/material';
 
-function createData(id, name, client, deadline, manager, progress) {
+function createData(id, name, comments, client, deadline, manager, progress) {
   return {
     id,
     name,
+    comments,
     client,
     deadline,
     manager,
@@ -212,7 +213,15 @@ EnhancedTableToolbar.propTypes = {
 
 export default function ProjectsList({ projects, handleClickToEdit, progressCalc }) {
   const rows = projects.map((item) =>
-    createData(item.project_id, item.project_name, 'not set', new Date(item.project_deadline).toLocaleDateString(), 'not set', 0)
+    createData(
+      item.project_id,
+      item.project_name,
+      item.project_comments,
+      'not set',
+      new Date(item.project_deadline).toLocaleDateString('fa-IR'),
+      'not set',
+      0
+    )
   );
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
