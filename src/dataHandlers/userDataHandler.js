@@ -2,15 +2,11 @@ import axios from 'axios';
 import { BASE_BACK_URL } from 'constants';
 
 //clients
-export const getUsers = () => {
-  axios
-    .get(`${BASE_BACK_URL}/users/read`)
-    .then((res) => {
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+export const getUsers = async () => {
+  return axios.get(`${BASE_BACK_URL}/users/read`).then((res) => {
+    console.log(res.data);
+    return res.data;
+  });
 };
 
 export const getUserById = (id) => {

@@ -20,13 +20,14 @@ import { Box } from '@mui/system';
 import { useParams } from 'react-router';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { getTasks } from 'dataHandlers/taskDataHandler';
+import { createTask, editTask, getTasks } from 'dataHandlers/taskDataHandler';
 import TasksList from '../Tasks/TasksList';
 import { getProjectById, getProjects } from 'dataHandlers/projectDataHandler';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 // eslint-disable-next-line no-restricted-imports
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+import { getUsers } from 'dataHandlers/userDataHandler';
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -41,8 +42,10 @@ export default function ProjectDetail() {
   const [taskEstimation, setTaskEstimation] = useState(0);
   const [taskProgress, setTaskProgress] = useState(null);
   const [taskProject, setTaskProject] = useState(null);
+  const [taskUser, setTaskUser] = useState(null);
   const [notif, setNotif] = useState(null);
   const [project, setProject] = useState(null);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     getProjectById(+id).then((res) => {
@@ -51,15 +54,27 @@ export default function ProjectDetail() {
     });
     handleGetProjects();
     setEditId(null);
-    getTasks().then((res) => {
-      setTasks([...res]);
-    });
+    handleGetTasks();
+    handleGetUsers();
   }, [id]);
 
   useEffect(() => {
     console.log(tasks);
     handleSortTasks();
   }, [tasks]);
+
+  const handleGetTasks = () => {
+    getTasks().then((res) => {
+      console.log(res);
+      setTasks([...res]);
+    });
+  };
+
+  const handleGetUsers = () => {
+    getUsers().then((res) => {
+      setUsers(res);
+    });
+  };
 
   const handleSortTasks = () => {
     let list = [];
@@ -71,6 +86,24 @@ export default function ProjectDetail() {
     setProjectTasks([...list]);
   };
 
+  const handleAddTask = () => {
+    createTask({
+      taskDescription: taskDescription,
+      deadline: new Date(taskDeadline).toISOString().split('T')[0],
+      estimation: taskEstimation,
+      progress: taskProgress,
+      projectId: taskProject,
+      user: taskUser
+    })
+      .then(() => {
+        setNotif('Task added successfully');
+        handleGetTasks();
+      })
+      .catch(() => {
+        setNotif('Something wrong');
+      });
+  };
+
   const handleClickToEdit = (id, data) => {
     setEditId(id);
     console.log(data);
@@ -79,8 +112,11 @@ export default function ProjectDetail() {
     setTaskEstimation(+data.estimation);
     setTaskProgress(data.progress);
     setTaskProject(data.projectId);
+    setTaskUser(data.user);
     setAddModal(true);
   };
+
+  console.log(new Date(taskDeadline));
 
   const handleEditTask = () => {
     editTask(editId, {
@@ -88,7 +124,9 @@ export default function ProjectDetail() {
       deadline: new Date(taskDeadline).toISOString().split('T')[0],
       estimation: +taskEstimation,
       progress: +taskProgress,
-      projectId: taskProject
+      projectId: taskProject,
+      user: taskUser,
+      qc: 0
     })
       .then(() => {
         setNotif('Task updated successfully');
@@ -150,7 +188,7 @@ export default function ProjectDetail() {
       <Box sx={{ width: '100%' }}>
         <Grid container sx={{ width: '100%', mt: 2 }}>
           <Grid item sx={{ width: '100%' }}>
-            <TasksList tasks={projectTasks} projects={projects} handleClickToEdit={handleClickToEdit} />
+            <TasksList tasks={projectTasks} projects={projects} handleClickToEdit={handleClickToEdit} users={users} />
           </Grid>
         </Grid>
       </Box>
@@ -235,6 +273,27 @@ export default function ProjectDetail() {
               {projects.map((item) => (
                 <MenuItem key={item.project_name} value={item.project_id}>
                   {item.project_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl variant="standard" sx={{ width: '100%', mt: 2 }}>
+            <InputLabel required id="task-project">
+              Assign to
+            </InputLabel>
+            <Select
+              required
+              labelId="task-user"
+              id="task-user"
+              value={taskUser}
+              onChange={(e) => {
+                setTaskUser(e.target.value);
+              }}
+              label="Assign to"
+            >
+              {users.map((item, index) => (
+                <MenuItem key={item.last_name + index} value={item.user_id}>
+                  {item.first_name + ' ' + item.last_name}
                 </MenuItem>
               ))}
             </Select>

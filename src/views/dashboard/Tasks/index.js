@@ -29,6 +29,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { createTask, editTask, getTasks } from 'dataHandlers/taskDataHandler';
 import { getProjects } from 'dataHandlers/projectDataHandler';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+import { getUsers } from 'dataHandlers/userDataHandler';
 
 export default function Tasks() {
   const [addModal, setAddModal] = useState(false);
@@ -38,13 +39,16 @@ export default function Tasks() {
   const [taskEstimation, setTaskEstimation] = useState(0);
   const [taskProgress, setTaskProgress] = useState(null);
   const [taskProject, setTaskProject] = useState(null);
+  const [taskUser, setTaskUser] = useState(null);
   const [notif, setNotif] = useState(null);
   const [projects, setProjects] = useState([]);
+  const [users, setUsers] = useState([]);
   const [editId, setEditId] = useState(null);
 
   useEffect(() => {
     handleGetTasks();
     handleGetProjects();
+    handleGetUsers();
     setEditId(null);
   }, []);
 
@@ -61,6 +65,12 @@ export default function Tasks() {
     });
   };
 
+  const handleGetUsers = () => {
+    getUsers().then((res) => {
+      setUsers(res);
+    });
+  };
+
   const handleGetProjects = () => {
     getProjects().then((res) => {
       console.log(res);
@@ -74,7 +84,8 @@ export default function Tasks() {
       deadline: new Date(taskDeadline).toISOString().split('T')[0],
       estimation: taskEstimation,
       progress: taskProgress,
-      projectId: taskProject
+      projectId: taskProject,
+      user: taskUser
     })
       .then(() => {
         setNotif('Task added successfully');
@@ -93,6 +104,7 @@ export default function Tasks() {
     setTaskEstimation(+data.estimation);
     setTaskProgress(data.progress);
     setTaskProject(data.projectId);
+    setTaskUser(data.user);
     setAddModal(true);
   };
 
@@ -102,7 +114,9 @@ export default function Tasks() {
       deadline: new Date(taskDeadline).toISOString().split('T')[0],
       estimation: +taskEstimation,
       progress: +taskProgress,
-      projectId: taskProject
+      projectId: taskProject,
+      user: taskUser,
+      qc: 0
     })
       .then(() => {
         setNotif('Task updated successfully');
@@ -144,7 +158,7 @@ export default function Tasks() {
           </Grid>
           <Grid container sx={{ width: '100%', mt: 2 }}>
             <Grid item sx={{ width: '100%' }}>
-              <TasksList tasks={tasks} projects={projects} handleClickToEdit={handleClickToEdit} />
+              <TasksList tasks={tasks} projects={projects} handleClickToEdit={handleClickToEdit} users={users} />
             </Grid>
           </Grid>
         </Box>
@@ -230,6 +244,27 @@ export default function Tasks() {
               {projects.map((item) => (
                 <MenuItem key={item.project_name} value={item.project_id}>
                   {item.project_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl variant="standard" sx={{ width: '100%', mt: 2 }}>
+            <InputLabel required id="task-project">
+              Assign to
+            </InputLabel>
+            <Select
+              required
+              labelId="task-user"
+              id="task-user"
+              value={taskUser}
+              onChange={(e) => {
+                setTaskUser(e.target.value);
+              }}
+              label="Assign to"
+            >
+              {users.map((item, index) => (
+                <MenuItem key={item.last_name + index} value={item.user_id}>
+                  {item.first_name + ' ' + item.last_name}
                 </MenuItem>
               ))}
             </Select>

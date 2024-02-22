@@ -211,18 +211,9 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 };
 
-export default function TasksList({ tasks, projects, handleClickToEdit }) {
+export default function TasksList({ tasks, projects, handleClickToEdit, users }) {
   const rows = tasks.map((item) =>
-    createData(
-      item.task_id,
-      item.task_description,
-      item.project_id,
-      new Date(item.deadline).toLocaleDateString('fa-IR'),
-      'not set',
-      'not set',
-      item.progress,
-      item.estimation
-    )
+    createData(item.task_id, item.task_description, item.project_id, item.deadline, item.user_id, 'not set', item.progress, item.estimation)
   );
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -235,6 +226,14 @@ export default function TasksList({ tasks, projects, handleClickToEdit }) {
     for (const item of projects) {
       if (item.project_id === id) {
         return item.project_name;
+      }
+    }
+  };
+
+  const showUserName = (id) => {
+    for (const item of users) {
+      if (item.user_id === id) {
+        return item.first_name + ' ' + item.last_name;
       }
     }
   };
@@ -336,8 +335,8 @@ export default function TasksList({ tasks, projects, handleClickToEdit }) {
                       {row.description}
                     </TableCell>
                     <TableCell align="left">{showProjectName(row.projectId)}</TableCell>
-                    <TableCell align="left">{row.deadline}</TableCell>
-                    <TableCell align="left">{row.assign}</TableCell>
+                    <TableCell align="left">{new Date(row.deadline).toLocaleDateString('fa-IR')}</TableCell>
+                    <TableCell align="left">{showUserName(row.assign)}</TableCell>
                     <TableCell align="left">{row.status}</TableCell>
                     <TableCell align="right">{row.progress}</TableCell>
                     <TableCell align="right">
@@ -352,7 +351,8 @@ export default function TasksList({ tasks, projects, handleClickToEdit }) {
                                 deadline: row.deadline,
                                 estimation: row.estimation,
                                 progress: row.progress,
-                                projectId: row.projectId
+                                projectId: row.projectId,
+                                user: row.assign
                               });
                             }}
                           />
@@ -400,5 +400,6 @@ export default function TasksList({ tasks, projects, handleClickToEdit }) {
 TasksList.propTypes = {
   tasks: PropTypes.array.isRequired,
   projects: PropTypes.array.isRequired,
+  users: PropTypes.array.isRequired,
   handleClickToEdit: PropTypes.func.isRequired
 };
