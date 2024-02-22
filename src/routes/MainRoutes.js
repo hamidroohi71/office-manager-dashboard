@@ -12,6 +12,7 @@ import HRPage from 'views/dashboard/HR';
 import Tasks from 'views/dashboard/Tasks';
 import Events from 'views/dashboard/Events';
 import Strategy from 'views/dashboard/Strategy';
+import ProjectDetail from 'views/dashboard/Projects/ProjectDetail';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -39,7 +40,16 @@ const MainRoutes = {
         },
         {
           path: 'projects',
-          element: <Projects />
+          children: [
+            {
+              path: '',
+              element: <Projects />
+            },
+            {
+              path: ':id',
+              element: <ProjectDetail />
+            }
+          ]
         },
         {
           path: 'technical',

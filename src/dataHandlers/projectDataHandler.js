@@ -9,15 +9,11 @@ export const getProjects = async () => {
   });
 };
 
-export const getProjectById = (id) => {
-  axios
-    .get(`${BASE_BACK_URL}/projects/read/${id}`)
-    .then((res) => {
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+export const getProjectById = async (id) => {
+  return axios.get(`${BASE_BACK_URL}/projects/read/${id}`).then((res) => {
+    console.log(res.data);
+    return res.data;
+  });
 };
 
 export const createProject = async (data) => {

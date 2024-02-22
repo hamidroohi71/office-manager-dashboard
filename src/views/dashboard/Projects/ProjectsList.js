@@ -23,6 +23,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import EditIcon from '@mui/icons-material/Edit';
 import { Grid } from '@mui/material';
+import { useNavigate } from 'react-router';
 
 function createData(id, name, comments, client, deadline, manager, progress) {
   return {
@@ -212,6 +213,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function ProjectsList({ projects, handleClickToEdit, progressCalc }) {
+  const navigate = useNavigate();
   const rows = projects.map((item) =>
     createData(
       item.project_id,
@@ -306,7 +308,9 @@ export default function ProjectsList({ projects, handleClickToEdit, progressCalc
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.id)}
+                    onClick={(event) => {
+                      navigate(`/dashboard/projects/${row.id}`);
+                    }}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
