@@ -24,15 +24,16 @@ import { visuallyHidden } from '@mui/utils';
 import { Grid } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
-function createData(id, description, project, deadline, assign, status, progress) {
+function createData(id, description, projectId, deadline, assign, status, progress, estimation) {
   return {
     id,
     description,
-    project,
+    projectId,
     deadline,
     assign,
     status,
-    progress
+    progress,
+    estimation
   };
 }
 
@@ -216,10 +217,11 @@ export default function TasksList({ tasks, projects, handleClickToEdit }) {
       item.task_id,
       item.task_description,
       item.project_id,
-      new Date(item.deadline).toISOString().split('T')[0],
+      new Date(item.deadline).toLocaleDateString('fa-IR'),
       'not set',
       'not set',
-      item.progress
+      item.progress,
+      item.estimation
     )
   );
   const [order, setOrder] = React.useState('asc');
@@ -333,7 +335,7 @@ export default function TasksList({ tasks, projects, handleClickToEdit }) {
                     <TableCell component="th" id={labelId} scope="row" padding="none">
                       {row.description}
                     </TableCell>
-                    <TableCell align="left">{showProjectName(row.project)}</TableCell>
+                    <TableCell align="left">{showProjectName(row.projectId)}</TableCell>
                     <TableCell align="left">{row.deadline}</TableCell>
                     <TableCell align="left">{row.assign}</TableCell>
                     <TableCell align="left">{row.status}</TableCell>

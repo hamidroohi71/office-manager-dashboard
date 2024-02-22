@@ -28,7 +28,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { createTask, editTask, getTasks } from 'dataHandlers/taskDataHandler';
 import { getProjects } from 'dataHandlers/projectDataHandler';
-import dayjs from 'dayjs';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 
 export default function Tasks() {
   const [addModal, setAddModal] = useState(false);
@@ -87,9 +87,9 @@ export default function Tasks() {
 
   const handleClickToEdit = (id, data) => {
     setEditId(id);
-    console.log(data.estimation);
+    console.log(data);
     setTaskDescription(data.description);
-    setTaskDeadline(dayjs(data.deadline));
+    setTaskDeadline(data.deadline);
     setTaskEstimation(+data.estimation);
     setTaskProgress(data.progress);
     setTaskProject(data.projectId);
@@ -173,11 +173,11 @@ export default function Tasks() {
             }}
             value={taskDescription}
           ></TextField>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
             <DemoContainer variant="standard" components={['DatePicker']} sx={{ height: 'fit-content', py: 2 }}>
               <DatePicker
                 label="Task Deadline"
-                value={taskDeadline}
+                value={new Date(taskDeadline)}
                 onChange={(newValue) => setTaskDeadline(newValue)}
                 slotProps={{ textField: { variant: 'standard' } }}
               />
